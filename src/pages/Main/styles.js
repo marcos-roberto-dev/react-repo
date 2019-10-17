@@ -1,5 +1,6 @@
 import styled, { keyframes } from "styled-components"
-import { FaGithub, FaPlus, FaSpinner } from "react-icons/fa"
+import { FaGithub, FaPlus, FaSpinner, FaBars, FaTrash } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
 const rotateLoading = keyframes`
   from {
@@ -8,6 +9,9 @@ const rotateLoading = keyframes`
   to {
     transform: rotate(360deg)
   }
+`
+export const LinkDetail = styled(Link)`
+  color: #0d2636;
 `
 
 export const IconGitHub = styled(FaGithub)`
@@ -19,6 +23,21 @@ export const IconAdd = styled(FaPlus)`
 
 export const IconLoading = styled(FaSpinner)`
   animation: ${rotateLoading} .6s infinite ease-in;
+`
+
+export const IconTrash = styled(FaTrash)`
+`
+
+export const IconBars = styled(FaBars)`
+`
+
+const Button = styled.button`
+  background: #0d2636;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export const Container = styled.div`
@@ -51,21 +70,53 @@ export const Input = styled.input`
   font-size: 17px;
 `
 
-export const SubmitButton = styled.button.attrs(props => ({
+export const SubmitButton = styled(Button).attrs(props => ({
   type: "submit",
   disabled: props.loading
 }))`
-  background: #0d2636;
-  border: none;
-  border-radius: 4px;
   margin-left: 10px;
   padding: 0 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 
   &[disabled]{
     cursor: not-allowed;
     opacity: 0.5;
   }
+`
+
+export const ListRepositories = styled.ul`
+  margin-top: 40px;
+`
+
+export const RepositorieItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & + li {
+    margin-top: 20px;
+    border-top: 1px solid #EEE;
+    padding-top: 20px;
+  }
+`
+
+export const RepositorieSpan = styled.span`
+  display: flex;
+  align-items: center;
+`
+
+export const RemoveRepositorie = styled(Button).attrs({
+  type: "button"
+})`
+  background: #FFF;
+  border-radius: none;
+  margin-right: 20px;
+`
+
+export const DetailRepositorie = styled(Button).attrs({
+  type: "button"
+})`
+  background: #FFF;
+  border-radius: none;
+  margin-right: 10px;
+
 `

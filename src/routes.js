@@ -9,7 +9,7 @@ export default function Routes() {
     <BrowserRouter>
       <Switch>
         <Route exact path="/" component={Main} />
-        <Route path="/repository/:repo" component={Repository} />
+        <Route path="/repositorie/:repo" component={Repository} />
       </Switch>
     </BrowserRouter>
   )

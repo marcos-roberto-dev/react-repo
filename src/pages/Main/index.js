@@ -40,6 +40,14 @@ export default function Main() {
 
   }, [newRepo, repositories])
 
+  const deleteRepositorie = useCallback((name) => {
+    const find = repositories.filter(repo => (
+      repo.name !== name
+    ))
+
+    setRepositories(find)
+
+  }, [repositories])
 
   return (
     <S.Container>
@@ -56,9 +64,33 @@ export default function Main() {
           onChange={handleInputChange}
         />
         <S.SubmitButton loading={loading ? 1 : 0}>
-          {loading ? <S.IconLoading size={14} color="#FFF" /> : <S.IconAdd size={14} color="#FFF" />}
+          {loading
+            ? <S.IconLoading size={14} color="#FFF" />
+            : <S.IconAdd size={14} color="#FFF" />
+          }
         </S.SubmitButton>
       </S.Form>
+
+      {repositories.length > 0 &&
+        <S.ListRepositories>
+          {repositories.map(repo => (
+            <S.RepositorieItem key={repo.name}>
+              <S.RepositorieSpan>
+                <S.RemoveRepositorie onClick={() => deleteRepositorie(repo.name)}>
+                  <S.IconTrash size={14} />
+                </S.RemoveRepositorie>
+                {repo.name}
+              </S.RepositorieSpan>
+              <S.DetailRepositorie>
+                <S.LinkDetail to={`/repositorie/${repo.name}`}>
+                  <S.IconBars size={25} />
+                </S.LinkDetail>
+              </S.DetailRepositorie>
+            </S.RepositorieItem>
+          ))}
+        </S.ListRepositories>
+      }
+
     </S.Container>
   )
 }

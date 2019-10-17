@@ -1,12 +1,24 @@
-import styled from "styled-components"
-import { FaGithub, FaPlus } from "react-icons/fa"
+import styled, { keyframes } from "styled-components"
+import { FaGithub, FaPlus, FaSpinner } from "react-icons/fa"
+
+const rotateLoading = keyframes`
+  from {
+    transform: rotate(0deg)
+  }
+  to {
+    transform: rotate(360deg)
+  }
+`
 
 export const IconGitHub = styled(FaGithub)`
   margin-right: 10px;
 `
 
 export const IconAdd = styled(FaPlus)`
+`
 
+export const IconLoading = styled(FaSpinner)`
+  animation: ${rotateLoading} .6s infinite ease-in;
 `
 
 export const Container = styled.div`
@@ -39,7 +51,10 @@ export const Input = styled.input`
   font-size: 17px;
 `
 
-export const SubmitButton = styled.button`
+export const SubmitButton = styled.button.attrs(props => ({
+  type: "submit",
+  disabled: props.loading
+}))`
   background: #0d2636;
   border: none;
   border-radius: 4px;
@@ -48,4 +63,9 @@ export const SubmitButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  &[disabled]{
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 `

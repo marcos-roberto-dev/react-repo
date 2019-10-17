@@ -44,9 +44,16 @@ export const Container = styled.div`
   max-width: 700px;
   background: #FFF;
   border-radius: 4px;
+  min-height: 240px;
   padding: 30px;
   margin: 80px auto;
   box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+`
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
 `
 
 export const Title = styled.h1`
@@ -64,7 +71,7 @@ export const Form = styled.form`
 
 export const Input = styled.input`
   flex: 1;
-  border: 1px solid #DDD;
+  border: 1px solid ${props => (props.error ? "#FF0000" : " #DDD")};
   padding: 10px 15px;
   border-radius: 4px;
   font-size: 17px;

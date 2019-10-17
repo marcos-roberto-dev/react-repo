@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 
 import * as S from "./styles"
 
@@ -8,9 +8,27 @@ export default function Main() {
   const [newRepo, setNewRepo] = useState("")
   const [repositories, setRepositories] = useState([])
   const [loading, setLoading] = useState(false)
+  const [alert, setAlert] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    const repositoriesJson = JSON.parse(localStorage.getItem("repositories"))
+    setTimeout(() => {
+      if (repositoriesJson) {
+        setRepositories(repositoriesJson)
+        setLoading(false)
+      }
+    }, 300)
+  }, [])
+
+  useEffect(() => {
+    const jsonRepositories = JSON.stringify(repositories)
+    localStorage.setItem("repositories", jsonRepositories)
+  }, [repositories])
 
   function handleInputChange(event) {
     setNewRepo(event.target.value)
+    setAlert(false)
   }
 
   const handleSubmit = useCallback((event) => {
@@ -20,15 +38,29 @@ export default function Main() {
       setLoading(true)
 
       try {
+
+        if (newRepo === "") {
+          setAlert(true)
+          throw new Error("Digite um repositorio valido!")
+        }
+
+        const hasRepositorie = repositories.some(repo => repo.name === newRepo)
+
         const response = await api.get(`repos/${newRepo}`)
         const data = {
           name: response.data.full_name
+        }
+
+        if (hasRepositorie) {
+          setAlert(true)
+          throw new Error("Esse repositorio já existe!")
         }
 
         setRepositories([...repositories, data])
         setNewRepo("")
       }
       catch (err) {
+        setAlert(true)
         console.log("ERRO AO BUSCAR REPOSITORIO: ", err)
       }
       finally {
@@ -62,6 +94,7 @@ export default function Main() {
           placeholder="Adicionar Repositorios"
           value={newRepo}
           onChange={handleInputChange}
+          error={alert}
         />
         <S.SubmitButton loading={loading ? 1 : 0}>
           {loading
@@ -71,24 +104,30 @@ export default function Main() {
         </S.SubmitButton>
       </S.Form>
 
-      {repositories.length > 0 &&
-        <S.ListRepositories>
-          {repositories.map(repo => (
-            <S.RepositorieItem key={repo.name}>
-              <S.RepositorieSpan>
-                <S.RemoveRepositorie onClick={() => deleteRepositorie(repo.name)}>
-                  <S.IconTrash size={14} />
-                </S.RemoveRepositorie>
-                {repo.name}
-              </S.RepositorieSpan>
-              <S.DetailRepositorie>
-                <S.LinkDetail to={`/repositorie/${repo.name}`}>
-                  <S.IconBars size={25} />
-                </S.LinkDetail>
-              </S.DetailRepositorie>
-            </S.RepositorieItem>
-          ))}
-        </S.ListRepositories>
+      {repositories.length > 0
+        ? (
+          <S.ListRepositories>
+            {repositories.map(repo => (
+              <S.RepositorieItem key={repo.name}>
+                <S.RepositorieSpan>
+                  <S.RemoveRepositorie onClick={() => deleteRepositorie(repo.name)}>
+                    <S.IconTrash size={14} />
+                  </S.RemoveRepositorie>
+                  {repo.name}
+                </S.RepositorieSpan>
+                <S.DetailRepositorie>
+                  <S.LinkDetail to={`/repositorie/${repo.name}`}>
+                    <S.IconBars size={25} />
+                  </S.LinkDetail>
+                </S.DetailRepositorie>
+              </S.RepositorieItem>
+            ))}
+          </S.ListRepositories>)
+        : loading && (
+          <S.LoadingContainer>
+            <S.IconLoading size={25} color="#0d2636" />
+          </S.LoadingContainer>
+        )
       }
 
     </S.Container>

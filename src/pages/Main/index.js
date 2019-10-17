@@ -8,15 +8,16 @@ export default function Main() {
   const [newRepo, setNewRepo] = useState("")
   const [repositories, setRepositories] = useState([])
   const [loading, setLoading] = useState(false)
+  const [loadingList, setLoadingList] = useState(false)
   const [alert, setAlert] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
+    setLoadingList(true)
     const repositoriesJson = JSON.parse(localStorage.getItem("repositories"))
     setTimeout(() => {
       if (repositoriesJson) {
         setRepositories(repositoriesJson)
-        setLoading(false)
+        setLoadingList(false)
       }
     }, 300)
   }, [])
@@ -123,7 +124,7 @@ export default function Main() {
               </S.RepositorieItem>
             ))}
           </S.ListRepositories>)
-        : loading && (
+        : loadingList && (
           <S.LoadingContainer>
             <S.IconLoading size={25} color="#0d2636" />
           </S.LoadingContainer>
